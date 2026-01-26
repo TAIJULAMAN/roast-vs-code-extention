@@ -1,0 +1,130 @@
+{
+  "name": "vs-roast",
+  "displayName": "VS Roast",
+  "description": "A linter that hurts your feelings",
+  "version": "0.0.1",
+  "publisher": "TAIJULAMAN",
+  "author": {
+    "name": "TAIJULAMAN"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TAIJULAMAN/roast-vs-code-extention.git"
+  },
+  "keywords": [
+    "linter",
+    "code quality",
+    "humor",
+    "roast",
+    "code review",
+    "typescript",
+    "javascript"
+  ],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vs-roast.toggleRoastMode",
+        "title": "VS Roast: Toggle Roast Mode"
+      },
+      {
+        "command": "vs-roast.showStats",
+        "title": "VS Roast: Show Statistics"
+      }
+    ],
+    "configuration": {
+      "title": "VS Roast",
+      "properties": {
+        "vsRoast.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable VS Roast"
+        },
+        "vsRoast.debounceDelay": {
+          "type": "number",
+          "default": 500,
+          "description": "Delay in milliseconds before updating roasts after typing"
+        },
+        "vsRoast.maxFileSize": {
+          "type": "number",
+          "default": 100000,
+          "description": "Maximum file size in bytes to scan (skip larger files)"
+        },
+        "vsRoast.rules": {
+          "type": "object",
+          "description": "Enable or disable specific roast rules",
+          "properties": {
+            "varUsage": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast usage of 'var' keyword"
+            },
+            "consoleLog": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast console.log statements"
+            },
+            "anyType": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast 'any' type usage in TypeScript"
+            },
+            "todoComments": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast TODO comments"
+            },
+            "deepNesting": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast deeply nested code"
+            },
+            "longFunctions": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast functions over 50 lines"
+            },
+            "looseEquality": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast == instead of ==="
+            },
+            "magicNumbers": {
+              "type": "boolean",
+              "default": true,
+              "description": "Roast magic numbers"
+            }
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.108.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.52.0",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
