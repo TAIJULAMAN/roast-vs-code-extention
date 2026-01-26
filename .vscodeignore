@@ -1,6 +1,5 @@
 *.vsix
 **/.vscode-test/**
-**/out/**
 **/node_modules/**
 **/.git/**
 .gitignore

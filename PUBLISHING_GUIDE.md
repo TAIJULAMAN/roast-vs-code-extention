@@ -8,7 +8,7 @@ Complete step-by-step guide to publish your VS Code extension to the marketplace
 
 Before publishing, ensure you have:
 
-- [x] Updated `package.json` with your publisher name (TAIJULAMAN) ✅
+- [x] Updated `package.json` with your publisher name (mdshahamanpatwary) ✅
 - [x] Updated repository URL ✅
 - [ ] Created extension icon (128x128px PNG)
 - [ ] Created marketplace banner (1280x640px PNG)
@@ -62,12 +62,12 @@ vsce --version
 ### Option A: Using vsce (Recommended)
 
 ```bash
-vsce create-publisher TAIJULAMAN
+vsce create-publisher mdshahamanpatwary
 ```
 
 When prompted:
 - Enter your **Personal Access Token** (from Step 2)
-- Enter **display name**: TAIJULAMAN (or your preferred name)
+- Enter **display name**: mdshahamanpatwary (or your preferred name)
 - Enter **email**: your email address
 
 ### Option B: Using Web Interface
@@ -76,8 +76,8 @@ When prompted:
 2. Sign in with your Microsoft account
 3. Click **Create publisher**
 4. Fill in:
-   - **ID**: TAIJULAMAN (must match package.json)
-   - **Display name**: TAIJULAMAN
+   - **ID**: mdshahamanpatwary (must match package.json)
+   - **Display name**: mdshahamanpatwary
    - **Email**: your email
 5. Click **Create**
 
@@ -190,7 +190,7 @@ If everything works, proceed to publishing!
 ### First-Time Login
 
 ```bash
-vsce login TAIJULAMAN
+vsce login mdshahamanpatwary
 ```
 
 Enter your **Personal Access Token** when prompted.

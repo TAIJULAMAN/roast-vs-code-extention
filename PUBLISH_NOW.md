@@ -2,7 +2,7 @@
 
 ## ✅ What's Already Done
 - [x] Extension code complete
-- [x] package.json updated with your name (TAIJULAMAN)
+- [x] package.json updated with your name (mdshahamanpatwary)
 - [x] Repository URL set
 - [x] vsce installed globally
 
@@ -26,12 +26,12 @@ Open PowerShell and run:
 
 ```powershell
 cd c:\Projects\roast-vs-code-extention\vs-roast
-vsce create-publisher TAIJULAMAN
+vsce create-publisher mdshahamanpatwary
 ```
 
 When prompted:
 - Paste your Personal Access Token
-- Enter display name: TAIJULAMAN
+- Enter display name: mdshahamanpatwary
 - Enter your email
 
 ### Step 3: Create Icon (Optional but Recommended)
@@ -59,7 +59,7 @@ This creates `vs-roast-0.0.1.vsix` file.
 ### Step 5: Login to Publisher (1 minute)
 
 ```powershell
-vsce login TAIJULAMAN
+vsce login mdshahamanpatwary
 ```
 
 Paste your Personal Access Token when prompted.
@@ -77,7 +77,7 @@ That's it! Your extension will be live in 5-10 minutes.
 ## 🔗 Your Extension URL (After Publishing)
 
 ```
-https://marketplace.visualstudio.com/items?itemName=TAIJULAMAN.vs-roast
+https://marketplace.visualstudio.com/items?itemName=mdshahamanpatwary.vs-roast
 ```
 
 ---
@@ -90,10 +90,10 @@ If you want to publish immediately without icon:
 # 1. Get PAT from Azure DevOps (see Step 1 above)
 
 # 2. Create publisher
-vsce create-publisher TAIJULAMAN
+vsce create-publisher mdshahamanpatwary
 
 # 3. Login
-vsce login TAIJULAMAN
+vsce login mdshahamanpatwary
 
 # 4. Publish
 cd c:\Projects\roast-vs-code-extention\vs-roast

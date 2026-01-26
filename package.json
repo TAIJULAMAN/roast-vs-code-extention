@@ -3,9 +3,9 @@
   "displayName": "VS Roast",
   "description": "A linter that hurts your feelings",
   "version": "0.0.1",
-  "publisher": "TAIJULAMAN",
+  "publisher": "mdshahamanpatwary",
   "author": {
-    "name": "TAIJULAMAN"
+    "name": "mdshahamanpatwary"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,11 @@
     "typescript",
     "javascript"
   ],
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#FF6B35",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -118,7 +123,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.108.1",
+    "@types/vscode": "^1.75.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "typescript-eslint": "^8.52.0",
