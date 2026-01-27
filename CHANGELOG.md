@@ -2,7 +2,25 @@
 
 All notable changes to the "Roast" extension will be documented in this file.
 
-## [0.0.1] - 2026-01-26
+## [0.0.6] - 2026-01-27
+
+### Fixed
+- **Marketplace Stability**: Switched license file to `LICENSE.txt` for better marketplace detection.
+- **Package Integrity**: Final verification of all assets and metadata.
+
+## [0.0.5] - 2026-01-27
+
+### Fixed
+- **Publisher ID Case Sensitivity**: Corrected publisher mapping to match marketplace account (`MdShahAmanPatwary`).
+- **Metadata**: Added required `license` field to `package.json`.
+
+## [0.0.4] - 2026-01-27
+
+### Fixed
+- Further optimization of package structure for Marketplace compatibility.
+- Standardized extension metadata.
+
+## [0.0.3] - 2026-01-27
 
 ### Added
 - Initial release of Roast
