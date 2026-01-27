@@ -4,7 +4,7 @@
 
 Roast is a VS Code extension that provides real-time, humorous "roasts" for common coding anti-patterns. It uses ghost text to inject witty comments next to problematic code, making code review both educational and entertaining.
 
-![Roast Demo](https://via.placeholder.com/800x400?text=Demo+GIF+Coming+Soon)
+![Roast Demo](demo.png)
 
 ## Features
 
