@@ -18,16 +18,4 @@ vsc-extension-quickstart.md
 **/.vscode/settings.json
 src/**
 test-roast.ts
-test-roast.js
-test-roast.js.map
 .editorconfig
-PUBLISHING_GUIDE.md
-PUBLISH_NOW.md
-QUICKSTART.md
-READY_TO_PUBLISH.md
-vsc-extension-quickstart.md
-package-lock.json
-resize_icon.ps1
-eslint.config.mjs
-# task_artifacts
-brain/**
