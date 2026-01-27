@@ -94,7 +94,7 @@ export class RoastCounter {
     public getStatistics(): string {
         const mostViolated = this.getMostViolatedRule();
 
-        let stats = `📊 VS Roast Statistics\n\n`;
+        let stats = `📊 Roast Statistics\n\n`;
         stats += `Total Roasts This Session: ${this.sessionCount}\n`;
         stats += `Files Roasted: ${this.fileRoastCounts.size}\n`;
         stats += `Achievements Unlocked: ${this.achievements.size}/4\n\n`;

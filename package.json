@@ -1,6 +1,6 @@
 {
   "name": "vs-roast",
-  "displayName": "VS Roast",
+  "displayName": "Roast",
   "description": "A linter that hurts your feelings",
   "version": "0.0.1",
   "publisher": "mdshahamanpatwary",
@@ -40,15 +40,15 @@
     "commands": [
       {
         "command": "vs-roast.toggleRoastMode",
-        "title": "VS Roast: Toggle Roast Mode"
+        "title": "Roast: Toggle Roast Mode"
       },
       {
         "command": "vs-roast.showStats",
-        "title": "VS Roast: Show Statistics"
+        "title": "Roast: Show Statistics"
       }
     ],
     "configuration": {
-      "title": "VS Roast",
+      "title": "Roast",
       "properties": {
         "vsRoast.enabled": {
           "type": "boolean",

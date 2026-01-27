@@ -1,5 +1,5 @@
 /**
- * VS Roast Extension
+ * Roast Extension
  * A linter that hurts your feelings
  */
 
@@ -15,7 +15,7 @@ let roastDecorationType: vscode.TextEditorDecorationType;
 let updateTimeout: NodeJS.Timeout | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('VS Roast is now active! 🔥');
+	console.log('Roast is now active! 🔥');
 
 	// Initialize global instances
 	roastCounter = new RoastCounter();
@@ -41,10 +41,10 @@ export function activate(context: vscode.ExtensionContext) {
 		statusBarManager.updateStatusBar(roastCounter.getSessionCount());
 
 		if (newState) {
-			vscode.window.showInformationMessage('🔥 VS Roast enabled! Prepare to be roasted.');
+			vscode.window.showInformationMessage('🔥 Roast enabled! Prepare to be roasted.');
 			triggerUpdateDecorations();
 		} else {
-			vscode.window.showInformationMessage('💤 VS Roast disabled. Your code is safe... for now.');
+			vscode.window.showInformationMessage('💤 Roast disabled. Your code is safe... for now.');
 			clearAllDecorations();
 		}
 	});

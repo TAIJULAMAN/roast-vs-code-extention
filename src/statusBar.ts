@@ -15,7 +15,7 @@ export class StatusBarManager {
             100
         );
         this.statusBarItem.command = 'vs-roast.toggleRoastMode';
-        this.statusBarItem.tooltip = 'Click to toggle VS Roast';
+        this.statusBarItem.tooltip = 'Click to toggle Roast';
         this.updateStatusBar(0);
         this.statusBarItem.show();
     }
