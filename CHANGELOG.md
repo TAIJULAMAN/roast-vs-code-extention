@@ -8,6 +8,12 @@ All notable changes to the "Roast" extension will be documented in this file.
 - **Marketplace Publishing**: Total reset of package identity and version for final stabilization.
 - **Identifier Sync**: Confirmed `vs-roast` as the primary identifier.
 
+## [1.0.0] - 2026-01-27
+
+### Added
+- **Official Stable Release**: Final integration of all Roast rules and features.
+- **Marketplace Stabilization**: Resolved publisher identifier and signing issues.
+
 ## [0.1.1] - 2026-01-27
 
 ### Fixed
