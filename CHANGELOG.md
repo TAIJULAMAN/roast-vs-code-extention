@@ -1,11 +1,11 @@
 # Changelog
 
-All notable changes to the "VS Roast" extension will be documented in this file.
+All notable changes to the "Roast" extension will be documented in this file.
 
 ## [0.0.1] - 2026-01-26
 
 ### Added
-- Initial release of VS Roast
+- Initial release of Roast
 - Real-time code roasting with decoration API
 - 8 core roast rules:
   - var keyword usage

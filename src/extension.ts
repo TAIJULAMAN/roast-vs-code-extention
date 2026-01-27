@@ -12,10 +12,14 @@ import { StatusBarManager } from './statusBar';
 let roastCounter: RoastCounter;
 let statusBarManager: StatusBarManager;
 let roastDecorationType: vscode.TextEditorDecorationType;
+let roastDiagnosticCollection: vscode.DiagnosticCollection;
 let updateTimeout: NodeJS.Timeout | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Roast is now active! 🔥');
+
+	// Check for Roast of the Day
+	checkRoastOfTheDay(context);
 
 	// Initialize global instances
 	roastCounter = new RoastCounter();
@@ -30,6 +34,9 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 		rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
 	});
+
+	// Create diagnostic collection for Problems view
+	roastDiagnosticCollection = vscode.languages.createDiagnosticCollection('roast');
 
 	// Register commands
 	const toggleCommand = vscode.commands.registerCommand('vs-roast.toggleRoastMode', () => {
@@ -49,9 +56,17 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	const showStatsCommand = vscode.commands.registerCommand('vs-roast.showStats', () => {
+	const showStatsCommand = vscode.commands.registerCommand('vs-roast.showStats', async () => {
 		const stats = roastCounter.getStatistics();
-		vscode.window.showInformationMessage(stats, { modal: true });
+		const shareStats = "Copy for Sharing 📋";
+
+		const selection = await vscode.window.showInformationMessage(stats, { modal: true }, shareStats);
+
+		if (selection === shareStats) {
+			const shareText = roastCounter.getShareableSummary();
+			await vscode.env.clipboard.writeText(shareText);
+			vscode.window.showInformationMessage('📋 Stats copied to clipboard! Time to brag (or cry).');
+		}
 	});
 
 	// Update decorations for active editor
@@ -89,7 +104,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		toggleCommand,
 		showStatsCommand,
-		roastDecorationType
+		roastDecorationType,
+		roastDiagnosticCollection
 	);
 
 	/**
@@ -136,9 +152,10 @@ export function activate(context: vscode.ExtensionContext) {
 		const text = document.getText();
 		const languageId = document.languageId;
 		const roasts: vscode.DecorationOptions[] = [];
+		const diagnostics: vscode.Diagnostic[] = [];
 		const enabledRules = getEnabledRules(languageId, config);
 
-		let roastCount = 0;
+		let currentRoastCount = 0;
 
 		// Apply regex-based rules
 		enabledRules.forEach(rule => {
@@ -148,17 +165,24 @@ export function activate(context: vscode.ExtensionContext) {
 			while ((match = regex.exec(text))) {
 				const startPos = document.positionAt(match.index);
 				const endPos = document.positionAt(match.index + match[0].length);
+				const insult = rule.getInsult();
 
 				roasts.push({
 					range: new vscode.Range(startPos, endPos),
 					renderOptions: {
 						after: {
-							contentText: rule.getInsult()
+							contentText: insult
 						}
 					}
 				});
 
-				roastCount++;
+				diagnostics.push(new vscode.Diagnostic(
+					new vscode.Range(startPos, endPos),
+					insult.replace(' << ', ''),
+					vscode.DiagnosticSeverity.Information
+				));
+
+				currentRoastCount++;
 				roastCounter.incrementCount(document.fileName, rule.id);
 			}
 		});
@@ -178,17 +202,47 @@ export function activate(context: vscode.ExtensionContext) {
 							}
 						}
 					});
-					roastCount++;
+
+					diagnostics.push(new vscode.Diagnostic(
+						range,
+						nestingCheck.insult.replace(' << ', ''),
+						vscode.DiagnosticSeverity.Information
+					));
+
+					currentRoastCount++;
 					roastCounter.incrementCount(document.fileName, 'deepNesting');
 				}
 			});
 		}
 
-		// Apply decorations
+		// Apply decorations and diagnostics
 		activeEditor.setDecorations(roastDecorationType, roasts);
+		roastDiagnosticCollection.set(document.uri, diagnostics);
 
 		// Update status bar
 		statusBarManager.updateStatusBar(roastCounter.getSessionCount());
+	}
+
+	/**
+	 * Roast of the Day
+	 */
+	function checkRoastOfTheDay(context: vscode.ExtensionContext) {
+		const lastRoastDate = context.globalState.get<string>('lastRoastDate');
+		const today = new Date().toDateString();
+
+		if (lastRoastDate !== today) {
+			const dailyRoasts = [
+				"Your code is like a horror movie: full of jump scares and everyone dies at the end.",
+				"I've seen better code written on a napkin during a blackout.",
+				"Your variable names are so vague, even a psychic couldn't debug this.",
+				"This repo belongs in an art gallery... as a warning about the dangers of over-engineering.",
+				"If coding was a sport, you'd be the mascot. Great presence, questionable performance."
+			];
+			const randomRoast = dailyRoasts[Math.floor(Math.random() * dailyRoasts.length)];
+
+			vscode.window.showInformationMessage(`🔥 Roast of the Day: ${randomRoast}`);
+			context.globalState.update('lastRoastDate', today);
+		}
 	}
 
 	/**
@@ -197,6 +251,7 @@ export function activate(context: vscode.ExtensionContext) {
 	function clearAllDecorations() {
 		if (activeEditor) {
 			activeEditor.setDecorations(roastDecorationType, []);
+			roastDiagnosticCollection.clear();
 		}
 	}
 }

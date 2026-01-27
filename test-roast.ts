@@ -1,5 +1,5 @@
 /**
- * Test file for VS Roast Extension
+ * Test file for Roast Extension
  * This file contains various code patterns that should trigger roasts
  */
 

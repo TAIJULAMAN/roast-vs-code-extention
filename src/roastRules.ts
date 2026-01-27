@@ -1,8 +1,3 @@
-/**
- * Roast Rules Definition
- * Each rule defines a pattern to match and a set of insults to display
- */
-
 export interface RoastRule {
     id: string;
     name: string;
@@ -13,7 +8,7 @@ export interface RoastRule {
     enabled: boolean;
 }
 
-// Insult collections organized by rule
+// Insult collections
 const insults = {
     var: [
         " << What is this, 2015? Use let/const.",
@@ -84,6 +79,20 @@ const insults = {
         " << There's ALWAYS a better way.",
         " << Your code just got pwned.",
         " << This is how hacks happen."
+    ],
+    react: [
+        " << manual DOM manipulation in React? Brave.",
+        " << dangerouslySetInnerHTML: living life on the edge.",
+        " << index as key? Enjoy your weird re-renders.",
+        " << inline functions in props: performance says hi.",
+        " << useMemo( ( ) => { stop_over-optimizing }, [] )"
+    ],
+    security: [
+        " << http://? Welcome to 1995. Use HTTPS.",
+        " << Hardcoded secret? I'm stealing this.",
+        " << Your security is a screen door.",
+        " << Vulnerability detected: laziness.",
+        " << Is this a backdoor or just bad code?"
     ]
 };
 
@@ -93,7 +102,7 @@ function getRandomInsult(category: keyof typeof insults): string {
     return list[Math.floor(Math.random() * list.length)];
 }
 
-// Define all roast rules
+// all roast rules
 export const roastRules: RoastRule[] = [
     {
         id: 'varUsage',
@@ -151,35 +160,61 @@ export const roastRules: RoastRule[] = [
         category: 'code-smell',
         getInsult: () => getRandomInsult('emptyBlock'),
         enabled: true
+    },
+    {
+        id: 'dangerouslySetInnerHTML',
+        name: 'Dangerously Set Inner HTML',
+        pattern: /dangerouslySetInnerHTML/g,
+        languages: ['javascriptreact', 'typescriptreact'],
+        category: 'security',
+        getInsult: () => getRandomInsult('react'),
+        enabled: true
+    },
+    {
+        id: 'indexAsKey',
+        name: 'Index as Key',
+        pattern: /\.map\s*\(\s*\([^)]+,\s*index\)\s*=>\s*[^}]*key=\{index\}/g,
+        languages: ['javascriptreact', 'typescriptreact'],
+        category: 'anti-pattern',
+        getInsult: () => getRandomInsult('react'),
+        enabled: true
+    },
+    {
+        id: 'httpUsage',
+        name: 'Unsecure HTTP Usage',
+        pattern: /http:\/\/[a-z0-9]/gi,
+        category: 'security',
+        getInsult: () => getRandomInsult('security'),
+        enabled: true
+    },
+    {
+        id: 'hardcodedSecret',
+        name: 'Hardcoded Secrets',
+        pattern: /(password|secret|api_key|token)\s*[:=]\s*['"`][^'"`]{8,}['"`]/gi,
+        category: 'security',
+        getInsult: () => getRandomInsult('security'),
+        enabled: true
     }
 ];
 
-/**
- * Get enabled rules for a specific language
- */
 export function getEnabledRules(languageId: string, config: any): RoastRule[] {
     return roastRules.filter(rule => {
         // Check if rule is enabled in config
         const ruleEnabled = config?.rules?.[rule.id] !== false;
-        
+
         // Check if rule applies to this language
         const languageMatch = !rule.languages || rule.languages.includes(languageId);
-        
+
         return ruleEnabled && languageMatch && rule.enabled;
     });
 }
 
-/**
- * Check for deep nesting (special case - line-based detection)
- */
 export function checkDeepNesting(line: string, lineNumber: number): { hasNesting: boolean; insult: string } {
-    // Check for 12 spaces or 3 tabs (Deep nesting)
     const hasDeepNesting = /^\s{12,}/.test(line) || /^\t{3,}/.test(line);
-    
+
     if (hasDeepNesting) {
         const trimmed = line.trim();
-        // Only roast control structures
-        if (trimmed.startsWith('if') || trimmed.startsWith('for') || 
+        if (trimmed.startsWith('if') || trimmed.startsWith('for') ||
             trimmed.startsWith('while') || trimmed.startsWith('switch')) {
             return {
                 hasNesting: true,
@@ -187,27 +222,21 @@ export function checkDeepNesting(line: string, lineNumber: number): { hasNesting
             };
         }
     }
-    
+
     return { hasNesting: false, insult: '' };
 }
 
-/**
- * Check for long functions (special case - requires context)
- */
 export function checkLongFunction(text: string, position: number): { isLong: boolean; insult: string } {
-    // Simple heuristic: count lines in current function
-    // This is a simplified version - a real implementation would use AST
     const beforeText = text.substring(0, position);
     const afterText = text.substring(position);
-    
-    // Find function boundaries (simplified)
+
     const functionStart = beforeText.lastIndexOf('function');
     const functionEnd = afterText.indexOf('}');
-    
+
     if (functionStart !== -1 && functionEnd !== -1) {
         const functionText = text.substring(functionStart, position + functionEnd);
         const lineCount = functionText.split('\n').length;
-        
+
         if (lineCount > 50) {
             return {
                 isLong: true,
@@ -215,6 +244,6 @@ export function checkLongFunction(text: string, position: number): { isLong: boo
             };
         }
     }
-    
+
     return { isLong: false, insult: '' };
 }

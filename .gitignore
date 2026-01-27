@@ -3,3 +3,10 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+
+# Supplementary Documentation
+PUBLISHING_GUIDE.md
+PUBLISH_NOW.md
+QUICKSTART.md
+READY_TO_PUBLISH.md
+vsc-extension-quickstart.md

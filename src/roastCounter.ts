@@ -120,6 +120,22 @@ export class RoastCounter {
     }
 
     /**
+     * Get shareable summary for social media
+     */
+    public getShareableSummary(): string {
+        const mostViolated = this.getMostViolatedRule();
+        const emojiLevel = this.sessionCount > 100 ? '💀' : this.sessionCount > 50 ? '🔥' : '🌱';
+
+        let shareText = `🔥 My Roast Stats ${emojiLevel}\n\n`;
+        shareText += `Total Roasts: ${this.sessionCount}\n`;
+        shareText += `Files Roasted: ${this.fileRoastCounts.size}\n`;
+        shareText += `Most Common Fail: ${mostViolated?.ruleId || 'None'}\n\n`;
+        shareText += `#RoastExtension #CodeRoast #VSCode`;
+
+        return shareText;
+    }
+
+    /**
      * Reset session statistics
      */
     public reset(): void {
