@@ -2,6 +2,12 @@
 
 All notable changes to the "Roast" extension will be documented in this file.
 
+## [0.1.0] - 2026-01-27
+
+### Changed
+- **Package Identity**: Renamed internal identifier to `roast` to match Marketplace naming.
+- **Stabilization**: Major version bump for final launch readiness.
+
 ## [0.0.6] - 2026-01-27
 
 ### Fixed
