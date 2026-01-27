@@ -2,6 +2,12 @@
 
 All notable changes to the "Roast" extension will be documented in this file.
 
+## [0.0.4] - 2026-01-27
+
+### Fixed
+- Further optimization of package structure for Marketplace compatibility.
+- Standardized extension metadata.
+
 ## [0.0.3] - 2026-01-27
 
 ### Added

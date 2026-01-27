@@ -2,7 +2,7 @@
   "name": "vs-roast",
   "displayName": "Roast",
   "description": "A linter that hurts your feelings",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "publisher": "mdshahamanpatwary",
   "author": {
     "name": "mdshahamanpatwary"
