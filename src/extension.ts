@@ -7,6 +7,9 @@ import * as vscode from 'vscode';
 import { getEnabledRules, checkDeepNesting } from './roastRules';
 import { RoastCounter } from './roastCounter';
 import { StatusBarManager } from './statusBar';
+import { RoastActionProvider } from './roastActions';
+import { RoastHoverProvider } from './roastHovers';
+import { getBlameForLine } from './gitUtils';
 
 // Global instances
 let roastCounter: RoastCounter;
@@ -69,6 +72,18 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	// Register Providers
+	const actionProvider = vscode.languages.registerCodeActionsProvider(
+		{ scheme: 'file', language: '*' },
+		new RoastActionProvider(),
+		{ providedCodeActionKinds: RoastActionProvider.providedCodeActionKinds }
+	);
+
+	const hoverProvider = vscode.languages.registerHoverProvider(
+		{ scheme: 'file', language: '*' },
+		new RoastHoverProvider()
+	);
+
 	// Update decorations for active editor
 	let activeEditor = vscode.window.activeTextEditor;
 	if (activeEditor) {
@@ -105,7 +120,9 @@ export function activate(context: vscode.ExtensionContext) {
 		toggleCommand,
 		showStatsCommand,
 		roastDecorationType,
-		roastDiagnosticCollection
+		roastDiagnosticCollection,
+		actionProvider,
+		hoverProvider
 	);
 
 	/**
@@ -127,7 +144,7 @@ export function activate(context: vscode.ExtensionContext) {
 	/**
 	 * Main decoration update function
 	 */
-	function updateDecorations() {
+	async function updateDecorations() {
 		if (!activeEditor) {
 			return;
 		}
@@ -158,6 +175,12 @@ export function activate(context: vscode.ExtensionContext) {
 		let currentRoastCount = 0;
 
 		// Apply regex-based rules
+		// We use a for...of loop to handle async operations if needed (though we only need async for blame, which is per-match)
+		// But regex.exec in a loop is synchronous.
+		// We will collect all matches first, then process them (to handle async blame).
+
+		const allMatches: { ruleId: string, insult: string, range: vscode.Range }[] = [];
+
 		enabledRules.forEach(rule => {
 			let match;
 			const regex = new RegExp(rule.pattern);
@@ -167,20 +190,11 @@ export function activate(context: vscode.ExtensionContext) {
 				const endPos = document.positionAt(match.index + match[0].length);
 				const insult = rule.getInsult();
 
-				roasts.push({
-					range: new vscode.Range(startPos, endPos),
-					renderOptions: {
-						after: {
-							contentText: insult
-						}
-					}
+				allMatches.push({
+					ruleId: rule.id,
+					insult: insult,
+					range: new vscode.Range(startPos, endPos)
 				});
-
-				diagnostics.push(new vscode.Diagnostic(
-					new vscode.Range(startPos, endPos),
-					insult.replace(' << ', ''),
-					vscode.DiagnosticSeverity.Information
-				));
 
 				currentRoastCount++;
 				roastCounter.incrementCount(document.fileName, rule.id);
@@ -194,20 +208,12 @@ export function activate(context: vscode.ExtensionContext) {
 				const nestingCheck = checkDeepNesting(line, index);
 				if (nestingCheck.hasNesting) {
 					const range = new vscode.Range(index, line.length, index, line.length);
-					roasts.push({
-						range: range,
-						renderOptions: {
-							after: {
-								contentText: nestingCheck.insult
-							}
-						}
-					});
 
-					diagnostics.push(new vscode.Diagnostic(
-						range,
-						nestingCheck.insult.replace(' << ', ''),
-						vscode.DiagnosticSeverity.Information
-					));
+					allMatches.push({
+						ruleId: 'deepNesting',
+						insult: nestingCheck.insult,
+						range: range
+					});
 
 					currentRoastCount++;
 					roastCounter.incrementCount(document.fileName, 'deepNesting');
@@ -215,9 +221,48 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 		}
 
+		// Now process all matches, potentially adding Git Blame
+		// We process in parallel for speed
+		const processedMatches = await Promise.all(allMatches.map(async match => {
+			let finalInsult = match.insult;
+
+			// Get git blame for the line
+			try {
+				const blame = await getBlameForLine(document.fileName, match.range.start.line);
+				if (blame) {
+					// Clean up the insult (remove << prefix if present for cleaner formatting)
+					const cleanInsult = finalInsult.replace(' << ', '');
+					finalInsult = ` << Hey ${blame}, ${cleanInsult}`;
+				}
+			} catch (e) {
+				// Ignore blame errors
+			}
+
+			return { ...match, insult: finalInsult };
+		}));
+
+		processedMatches.forEach(match => {
+			roasts.push({
+				range: match.range,
+				renderOptions: {
+					after: {
+						contentText: match.insult
+					}
+				}
+			});
+
+			diagnostics.push(new vscode.Diagnostic(
+				match.range,
+				match.insult.replace(' << ', ''),
+				vscode.DiagnosticSeverity.Information
+			));
+		});
+
 		// Apply decorations and diagnostics
-		activeEditor.setDecorations(roastDecorationType, roasts);
-		roastDiagnosticCollection.set(document.uri, diagnostics);
+		if (activeEditor && activeEditor.document === document) {
+			activeEditor.setDecorations(roastDecorationType, roasts);
+			roastDiagnosticCollection.set(document.uri, diagnostics);
+		}
 
 		// Update status bar
 		statusBarManager.updateStatusBar(roastCounter.getSessionCount());
