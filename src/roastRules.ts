@@ -93,6 +93,20 @@ const insults = {
         " << Your security is a screen door.",
         " << Vulnerability detected: laziness.",
         " << Is this a backdoor or just bad code?"
+    ],
+    whitespace: [
+        " << Did you get paid by the byte?",
+        " << Invisible characters, visible incompetence.",
+        " << Trailing whitespace? How messy.",
+        " << Clean up your code, you slob.",
+        " << Why is this space here?"
+    ],
+    emptyLines: [
+        " << Trying to make your code look longer?",
+        " << Too much vertical space.",
+        " << You know you can just scroll, right?",
+        " << Code doesn't need breathing room.",
+        " << Formatting: F-"
     ]
 };
 
@@ -193,6 +207,22 @@ export const roastRules: RoastRule[] = [
         pattern: /(password|secret|api_key|token)\s*[:=]\s*['"`][^'"`]{8,}['"`]/gi,
         category: 'security',
         getInsult: () => getRandomInsult('security'),
+        enabled: true
+    },
+    {
+        id: 'trailingWhitespace',
+        name: 'Trailing Whitespace',
+        pattern: /[ \t]+$/gm,
+        category: 'code-smell',
+        getInsult: () => getRandomInsult('whitespace'),
+        enabled: true
+    },
+    {
+        id: 'multipleEmptyLines',
+        name: 'Multiple Empty Lines',
+        pattern: /\n\s*\n\s*\n/g,
+        category: 'code-smell',
+        getInsult: () => getRandomInsult('emptyLines'),
         enabled: true
     }
 ];
